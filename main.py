@@ -1,6 +1,6 @@
 import yt_dlp
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QFormLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QFormLayout, QProgressBar, QComboBox
 import sys
 
 class MainWindow(QWidget) : 
@@ -14,16 +14,20 @@ class MainWindow(QWidget) :
             
             self.input_link =  QLineEdit(self)
             self.input_link.setPlaceholderText ("Enter the video link ")
-            self.layout.addWidget (self.input_link) 
+            self.layout.addRow("Video link", self.input_link)
 
             self.input_filename= QLineEdit(self)
             self.input_filename.setPlaceholderText("Enter the file name")
-            self.layout.addWidget(self.input_filename)
+            self.layout.addRow("File name", self.input_filename)
 
-            self.input_format = QLineEdit(self)
-            self.input_format.setPlaceholderText("Enter the file format (mp3/mp4)")
-            self.layout.addWidget(self.input_format)
-        
+            self.input_format = QComboBox(self)
+            self.input_format.addItem("mp3")
+            self.input_format.addItem("mp4")
+            self.layout.addRow("Select format : ", self.input_format)   
+
+            self.progress_bar = QProgressBar(self)
+            self.progress_bar.setValue(0)
+            self.layout.addRow("Download status :", self.progress_bar)
 
             self.label = QLabel ("Sonuc buraya cikacak :", self)
             self.layout.addWidget(self.label)
@@ -72,7 +76,7 @@ class MainWindow(QWidget) :
         def on_button_click(self) :
                 link  = self.input_link.text()
                 filename= self.input_filename.text()
-                format = self.input_format.text() 
+                format = self.input_format.currentText() 
 
                 if link and filename and format :
                     self.label.setText("Indiriliyor...")
