@@ -1,37 +1,73 @@
 import yt_dlp
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QFormLayout
 import sys
 
 class MainWindow(QWidget) : 
         def __init__(self, parent=None):
             super().__init__(parent)
             self.setWindowTitle("YT downloader")
-            self.setGeometry(100,100,400,200)
+            self.setGeometry(600,300,500,300)   
 
-            self.layout= QVBoxLayout()
+            self.layout= QFormLayout()
+            self.layout.setSpacing(15)
+            
             self.input_link =  QLineEdit(self)
-            self.input_link.setPlaceholderText ("Youtube Linki giriniz :")
+            self.input_link.setPlaceholderText ("Enter the video link ")
             self.layout.addWidget (self.input_link) 
 
             self.input_filename= QLineEdit(self)
-            self.input_filename.setPlaceholderText("Dosya ismini girin")
+            self.input_filename.setPlaceholderText("Enter the file name")
             self.layout.addWidget(self.input_filename)
 
             self.input_format = QLineEdit(self)
-            self.input_format.setPlaceholderText("Dosya formatini girin : (mp3/mp4)")
+            self.input_format.setPlaceholderText("Enter the file format (mp3/mp4)")
             self.layout.addWidget(self.input_format)
         
 
             self.label = QLabel ("Sonuc buraya cikacak :", self)
             self.layout.addWidget(self.label)
 
-            self.button =   QPushButton("Gonder",self)
+            self.button =   QPushButton("Download",self)
             self.button.clicked.connect(self.on_button_click)
             self.layout.addWidget(self.button)
 
             self.setLayout(self.layout)
 
+            self.setStyleSheet("""
+            QWidget {
+                background-color: #f4f6f7;
+                font-family: 'Segoe UI';
+                font-size: 14px;
+            }
+            QLineEdit {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            QLabel {
+                color: #2c3e50;
+                font-weight: bold;
+            }
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                font-size: 15px;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+            QPushButton:pressed {
+                background-color: #2ecc71;
+            }
+            QPushButton:disabled {
+                background-color: #95a5a6;
+            }
+        """)
             
         def on_button_click(self) :
                 link  = self.input_link.text()
