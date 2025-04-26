@@ -25,10 +25,19 @@ class MainWindow(QWidget) :
             self.input_format.addItem("mp4")
             self.layout.addRow("Select format : ", self.input_format)   
 
-           # self.progress_bar = QProgressBar(self)
-           # self.progress_bar.setValue(0)
-            #self.layout.addRow("Download status :", self.progress_bar)
+            self.resolation = QComboBox(self)
+            self.resolation.addItem("1080p")
+            self.resolation.addItem("720p")
+            self.resolation.addItem("480p")
+            self.resolation.addItem("360p")
+            self.resolation.addItem("240p")
+            self.resolation.addItem("144p")
 
+            self.layout.addRow("Select resolation :  ", self.resolation)
+            self.input_format.currentIndexChanged.connect(self.on_format_selected)
+
+            self.resolation.hide()
+            
             self.button =   QPushButton("Download",self)
             self.button.clicked.connect(self.on_button_click)
             self.layout.addWidget(self.button)
@@ -84,8 +93,20 @@ class MainWindow(QWidget) :
                 else: 
                      self.status_label.setText("Something went wrong.") 
 
-        def DownloadAudio(self, link, filename,format_choice):
+        def on_format_selected (self) :
+             format=self.input_format.currentText()
 
+             if format == "mp4": 
+                 self.resolation.show()
+             else :
+                 self.resolation.hide()
+     
+
+        def DownloadAudio(self, link, filename,format_choice):
+                
+                selected_res= self.resolation.currentText()
+                selected_height = int(selected_res.replace("p" , ""))
+                
                 if format_choice == 'mp3': 
 
                     ydl_opts = {
@@ -99,7 +120,7 @@ class MainWindow(QWidget) :
                     }
                 elif format_choice=='mp4': 
                     ydl_opts = {
-                        'format': 'best[ext=mp4]/best',
+                        'format': f"bestvideo[ext=mp4][height<={selected_height}]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                         'outtmpl': filename + '.%(ext)s',   
                         'merge_output_format': 'mp4',
                     }
