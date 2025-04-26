@@ -25,16 +25,16 @@ class MainWindow(QWidget) :
             self.input_format.addItem("mp4")
             self.layout.addRow("Select format : ", self.input_format)   
 
-            self.progress_bar = QProgressBar(self)
-            self.progress_bar.setValue(0)
-            self.layout.addRow("Download status :", self.progress_bar)
-
-            self.label = QLabel ("Sonuc buraya cikacak :", self)
-            self.layout.addWidget(self.label)
+           # self.progress_bar = QProgressBar(self)
+           # self.progress_bar.setValue(0)
+            #self.layout.addRow("Download status :", self.progress_bar)
 
             self.button =   QPushButton("Download",self)
             self.button.clicked.connect(self.on_button_click)
             self.layout.addWidget(self.button)
+
+            self.status_label= QLabel("", self )
+            self.layout.addRow("Status:", self.status_label) 
 
             self.setLayout(self.layout)
 
@@ -79,12 +79,12 @@ class MainWindow(QWidget) :
                 format = self.input_format.currentText() 
 
                 if link and filename and format :
-                    self.label.setText("Indiriliyor...")
+                    self.status_label.setText("Downloading...")
                     self.DownloadAudio(link,filename,format)
                 else: 
-                     self.label.setText("Something went wrong.") 
+                     self.status_label.setText("Something went wrong.") 
 
-        def DownloadAudio(elf, link, filename,format_choice):
+        def DownloadAudio(self, link, filename,format_choice):
 
                 if format_choice == 'mp3': 
 
@@ -99,7 +99,7 @@ class MainWindow(QWidget) :
                     }
                 elif format_choice=='mp4': 
                     ydl_opts = {
-                        'format': 'bestvideo+bestaudio/best',
+                        'format': 'best[ext=mp4]/best',
                         'outtmpl': filename + '.%(ext)s',   
                         'merge_output_format': 'mp4',
                     }
@@ -110,10 +110,13 @@ class MainWindow(QWidget) :
                     try:
                         ydl.download([link])
                         print("Ses başarıyla indirildi.")
+                        self.status_label.setText("Download succes ✅")
+
                     except Exception as e:
                         print(f"Bir hata oluştu: {e}")
 
 if __name__ == "__main__":
+    
 
     app = QApplication(sys.argv)
     window = MainWindow()
